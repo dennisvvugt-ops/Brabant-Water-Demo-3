@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brabant Water | Storing End-to-End Demo</title>
+<style>
+:root{--blue:#243b91;--blue2:#172c70;--green:#54a646;--green2:#3d8f3e;--ink:#18305f;--muted:#6c7890;--bg:#f3f7fa;--line:#dce5ed;--red:#e34f50;--orange:#efaa36;--white:#fff;--shadow:0 18px 45px rgba(25,53,100,.12)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif}.app{min-height:100vh}
+header{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 28px;gap:30px;position:sticky;top:0;z-index:50}.logo{width:175px;height:auto}.nav{display:flex;gap:7px;flex:1}.nav span{padding:10px 14px;border-radius:10px;color:#738097;font-size:12px;font-weight:800}.nav span.active{background:#eef6ec;color:var(--green2)}.live{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:900;color:#4f637c}.live i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px #e3f2df}
+.hero{background:linear-gradient(115deg,var(--blue2),var(--blue));color:#fff;padding:27px 32px 25px}.hero-inner{max-width:1480px;margin:auto;display:flex;justify-content:space-between;align-items:end;gap:25px}.eyebrow{text-transform:uppercase;font-size:10px;letter-spacing:.16em;font-weight:900;opacity:.72}.hero h1{font-size:32px;line-height:1.04;margin:8px 0 7px;letter-spacing:-.04em}.hero p{margin:0;color:#dbe5ff;font-size:13px;max-width:770px}.scenario{min-width:260px;padding:14px 16px;border-radius:15px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16)}.scenario small{display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.65}.scenario b{display:block;margin-top:4px;font-size:15px}.scenario span{font-size:10px;color:#d7e3ff}
+.wrap{max-width:1480px;margin:auto;padding:18px 24px 38px}.dashboard{display:grid;grid-template-columns:260px minmax(500px,1fr) 315px;gap:15px;align-items:stretch}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.left{padding:16px}.left h3,.right h3{font-size:13px;margin:0 0 14px}.step{width:100%;display:grid;grid-template-columns:31px 1fr 14px;gap:10px;align-items:center;text-align:left;border:0;background:transparent;padding:10px 8px;border-radius:13px;cursor:pointer;position:relative}.step:hover{background:#f3f7fa}.step.active{background:#eef5fd}.step .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#e7edf3;color:#738096;font-size:10px;font-weight:900}.step.active .n{background:var(--blue);color:#fff}.step.done .n{background:#e1f1dc;color:var(--green2)}.step b{font-size:11px}.step small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.arrow{color:#9aa6b7;font-size:14px}.step.active .arrow{color:var(--blue)}.connector{height:14px;border-left:2px dotted #d6dee7;margin-left:20px}
+.mapcard{overflow:hidden;position:relative;min-height:640px}.maphead{height:64px;background:#fff;display:flex;justify-content:space-between;align-items:center;padding:0 17px;border-bottom:1px solid var(--line);position:relative;z-index:5}.maptitle{display:flex;gap:10px;align-items:center}.mapicon{width:36px;height:36px;border-radius:11px;background:#eaf1fb;display:grid;place-items:center;color:var(--blue);font-size:18px}.maptitle b{font-size:13px}.maptitle span{display:block;font-size:9px;color:var(--muted);margin-top:2px}.map-actions{display:flex;gap:7px}.map-actions button{border:1px solid var(--line);background:#fff;color:var(--blue);border-radius:9px;padding:8px 10px;font-size:9px;font-weight:900;cursor:pointer}.map-actions .primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.map{position:absolute;top:64px;left:0;right:0;bottom:0;background:#e7edf2}.map iframe{width:100%;height:100%;border:0;display:block}
+.outage-zone{position:absolute;left:39%;top:31%;width:205px;height:205px;border-radius:50%;background:rgba(227,79,80,.13);border:2px dashed rgba(227,79,80,.75);z-index:3;pointer-events:none}.outage-zone:before{content:"";position:absolute;inset:43px;border-radius:50%;background:rgba(227,79,80,.11)}.pin{position:absolute;left:49%;top:45%;z-index:6;width:24px;height:24px;border-radius:50% 50% 50% 0;background:var(--red);transform:rotate(-45deg);box-shadow:0 5px 16px rgba(227,79,80,.45);cursor:pointer}.pin:after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:#fff;left:8px;top:8px}.pin.pulse{animation:pinpulse 1.4s infinite}.map-label{position:absolute;left:calc(49% + 17px);top:calc(45% - 7px);z-index:7;background:#fff;border-radius:9px;padding:8px 10px;box-shadow:0 8px 20px rgba(25,50,90,.18);font-size:9px;font-weight:900;color:var(--red);pointer-events:none}.map-label span{display:block;color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}.map-status{position:absolute;left:14px;top:14px;z-index:7;background:#fff;border-radius:12px;padding:10px 12px;box-shadow:0 10px 25px rgba(25,50,90,.17);font-size:9px;font-weight:900}.map-status i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-right:5px}.map-status span{display:block;color:var(--muted);font-weight:600;margin-top:3px}.map-card-note{position:absolute;bottom:13px;left:13px;right:13px;z-index:7;background:rgba(255,255,255,.95);border-radius:13px;padding:10px 12px;box-shadow:0 9px 20px rgba(25,50,90,.14);display:flex;justify-content:space-between;align-items:center}.map-card-note b{font-size:10px}.map-card-note span{font-size:9px;color:var(--muted)}.map-card-note button{border:0;background:#eef5fd;color:var(--blue);border-radius:8px;padding:7px 10px;font-size:9px;font-weight:900;cursor:pointer}
+.overlay{position:absolute;z-index:8;display:none}.overlay.show{display:block;animation:pop .28s ease}.twin{left:15px;top:75px;width:285px;background:rgba(18,42,88,.95);color:#fff;border-radius:15px;padding:14px;box-shadow:0 18px 35px rgba(15,40,80,.3)}.twin .tt{display:flex;justify-content:space-between;font-size:9px;font-weight:900}.twin .ok{color:#7be06e}.mini-map{height:105px;margin-top:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);position:relative;background:linear-gradient(135deg,#203d72,#2b527d)}.mini-map:after{content:"";position:absolute;left:30px;right:20px;top:55px;border-top:4px solid #6fc0df;transform:rotate(-14deg)}.mdot{position:absolute;width:9px;height:9px;background:#ffca4b;border-radius:50%;box-shadow:0 0 0 5px rgba(255,202,75,.15)}.m1{left:50px;top:48px}.m2{left:135px;top:33px}.m3{right:42px;bottom:17px}.twin p{font-size:9px;color:#b9c9e6;line-height:1.45;margin:9px 0 0}
+.mobile{right:17px;top:80px;width:165px;background:#182b4c;border:6px solid #182b4c;border-radius:24px;box-shadow:0 18px 35px rgba(20,45,90,.28)}.mobile .screen{background:#fff;border-radius:17px;overflow:hidden}.m-top{height:18px;background:#f5f7fa}.m-body{padding:12px}.m-brand{font-size:8px;color:var(--blue);font-weight:900}.notif{background:#edf7ea;border-radius:10px;padding:9px;margin-top:10px;font-size:8px;line-height:1.45}.notif b{display:block;font-size:9px;margin-bottom:3px;color:#315f38}.mobile .link{margin-top:9px;color:var(--blue);font-size:8px;font-weight:900}
+.agent{right:15px;bottom:62px;width:350px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;box-shadow:0 18px 35px rgba(20,45,90,.24)}.agenttop{display:flex;align-items:center;gap:9px}.avatar{width:33px;height:33px;border-radius:50%;background:#e4f0e0;color:var(--green2);display:grid;place-items:center;font-size:10px;font-weight:900}.agent b{font-size:10px}.agent small{display:block;color:var(--muted);font-size:8px;margin-top:2px}.context{margin-top:10px;background:#f4f7fa;border-radius:10px;padding:9px;font-size:8px;line-height:1.55}.context strong{color:var(--blue)}.agent-actions{display:flex;gap:5px;margin-top:7px}.agent-actions button{border:0;border-radius:7px;padding:6px 8px;font-size:8px;font-weight:900;background:#edf3f9;color:var(--blue)}.agent-actions .go{background:var(--green);color:#fff}
+.right{padding:16px}.statusbox{border-radius:14px;background:#eef7eb;padding:13px;margin-bottom:14px}.statusbox .label{font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:#668069;font-weight:900}.statusbox b{display:block;font-size:15px;margin-top:3px;color:#315f38}.statusbox span{display:block;font-size:9px;color:#65766b;margin-top:3px}.feed{position:relative;padding-left:20px}.feed:before{content:"";position:absolute;left:5px;top:4px;bottom:4px;border-left:2px solid #e2e8ee}.event{position:relative;padding:0 0 14px}.event:before{content:"";position:absolute;left:-20px;top:2px;width:8px;height:8px;border-radius:50%;background:#cbd6e0;border:3px solid #fff;box-shadow:0 0 0 1px #cbd6e0}.event.active:before{background:var(--green);box-shadow:0 0 0 1px var(--green)}.event b{font-size:9px}.event span{display:block;color:var(--muted);font-size:8px;margin-top:2px;line-height:1.4}.metric{border-top:1px solid var(--line);margin-top:3px;padding-top:13px}.metricrow{display:flex;justify-content:space-between;padding:6px 0;font-size:9px}.metricrow span{color:var(--muted)}.metricrow b{color:var(--ink)}
+.bottom{margin-top:15px;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:14px 16px}.bottomtop{display:flex;justify-content:space-between;align-items:center}.bottomtop b{font-size:12px}.bottomtop span{font-size:9px;color:var(--muted)}.timeline{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;margin-top:12px}.tl{height:8px;background:#e7edf2;border-radius:20px;position:relative}.tl.active{background:var(--green)}.tl.done{background:#b7d8ad}.tl:after{content:"";position:absolute;right:-3px;top:-3px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid #d8e1e9}.tl.active:after{border-color:var(--green)}.bottomlabels{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;margin-top:7px}.bottomlabels span{font-size:8px;color:#78859a;font-weight:800}.buttons{display:flex;gap:7px;margin-top:12px}.buttons button{border:0;border-radius:10px;padding:10px 13px;font-size:9px;font-weight:900;cursor:pointer}.next{background:var(--blue);color:#fff}.restart{background:#edf3f8;color:var(--blue)}
+.disclaimer{text-align:center;font-size:8px;color:#8793a4;margin-top:12px}
+@keyframes pinpulse{50%{box-shadow:0 0 0 10px rgba(227,79,80,.13),0 8px 20px rgba(227,79,80,.35)}}@keyframes pop{from{opacity:0;transform:translateY(5px) scale(.98)}to{opacity:1;transform:none}}
+@media(max-width:1150px){.dashboard{grid-template-columns:230px 1fr}.right{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:15px}.right h3{grid-column:1/-1}.statusbox{margin:0}.metric{display:none}}
+@media(max-width:800px){header{padding:0 14px}.nav{display:none}.hero{padding:22px 17px}.hero-inner{display:block}.scenario{margin-top:15px}.wrap{padding:12px}.dashboard{display:block}.left{margin-bottom:12px}.left-inner{display:grid;grid-template-columns:repeat(2,1fr)}.connector{display:none}.mapcard{min-height:600px}.right{display:block;margin-top:12px}.mobile{right:8px;transform:scale(.85);transform-origin:top right}.agent{left:10px;right:10px;width:auto}.timeline{overflow:hidden}.bottomlabels{overflow:hidden}.bottomlabels span{white-space:nowrap}}
+
+/* Operational cockpit */
+.ops{display:none;position:absolute;inset:64px 0 0;background:#f3f7fa;padding:17px 17px 15px;overflow:auto}.ops.show{display:block;animation:fadein .3s ease}
+.ops-banner{background:linear-gradient(110deg,#182f72,#243f91);color:#fff;border-radius:15px;padding:13px 15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;box-shadow:0 12px 24px rgba(30,57,112,.16)}.ops-banner b{display:block;font-size:14px;margin:4px 0 2px}.ops-banner small{display:block;color:#d7e3ff;font-size:9px}.ops-live{font-size:8px;letter-spacing:.12em;font-weight:900;color:#8be37e}.ops-time{text-align:right;font-size:12px;font-weight:900}.ops-time small{font-weight:600;color:#bfcdf0}
+.ops-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.ops-card{background:#fff;border:1px solid #dfe7ee;border-radius:14px;padding:12px;min-height:145px;box-shadow:0 6px 18px rgba(25,53,100,.05)}.ops-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.ops-card-head span{font-size:7px;letter-spacing:.12em;color:#8591a4;font-weight:900}.ops-card-head b{font-size:10px}.big-number{font-size:29px;font-weight:900;color:var(--blue);letter-spacing:-.04em}.big-number small{font-size:9px;color:var(--muted);font-weight:800}.mini-stats{display:flex;gap:7px;margin:5px 0 8px}.mini-stats span{background:#f3f6f9;padding:6px 8px;border-radius:7px;font-size:8px;color:var(--muted)}.mini-stats b{color:var(--ink)}.progress{height:5px;background:#e9eef2;border-radius:9px;overflow:hidden}.progress i{display:block;width:66%;height:100%;background:var(--orange);border-radius:9px}.muted{font-size:8px;color:var(--muted);margin-top:7px}
+.comm-row,.work-row{display:flex;align-items:center;gap:8px;border-top:1px solid #edf1f4;padding:8px 0}.comm-row:first-of-type,.work-row:first-of-type{border-top:0}.comm-row i{width:7px;height:7px;border-radius:50%;display:block}.okdot{background:var(--green)}.waitdot{background:var(--orange)}.comm-row div,.work-row div{flex:1}.comm-row b,.work-row b{display:block;font-size:9px}.comm-row small,.work-row small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.comm-row>strong{color:var(--green);font-size:11px}.work-icon{width:23px;height:23px;border-radius:7px;background:#edf3f9;display:grid;place-items:center;color:var(--blue);font-size:10px}.tag{font-size:7px;font-weight:900;background:#fff0df;color:#ad6b12;padding:5px 6px;border-radius:6px}.tag.blue{background:#e9effb;color:var(--blue)}.tag.green{background:#e5f3e1;color:var(--green2)}
+.customer{display:flex;align-items:center;gap:8px}.cust-avatar{width:30px;height:30px;border-radius:50%;background:#e5eef9;color:var(--blue);display:grid;place-items:center;font-size:8px;font-weight:900}.customer b{font-size:9px}.customer small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.verified{margin-left:auto;font-size:7px;color:var(--green2);background:#e7f4e3;padding:4px 6px;border-radius:5px;font-weight:900}.customer-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}.customer-grid span{background:#f5f7f9;padding:7px;border-radius:7px;font-size:7px;color:var(--muted)}.customer-grid b{display:block;color:var(--ink);font-size:8px;margin-top:2px}
+.instruction{display:flex;gap:8px;background:#f0f6fd;border-radius:9px;padding:9px}.instruction>span{width:20px;height:20px;border-radius:6px;background:#dceafa;color:var(--blue);display:grid;place-items:center;font-size:9px;font-weight:900}.instruction b{font-size:8px}.instruction p{font-size:8px;color:#5d6c82;line-height:1.4;margin:3px 0 0}.quick{display:flex;gap:5px;margin-top:8px}.quick button{border:0;background:#eef4f9;color:var(--blue);padding:6px 7px;border-radius:6px;font-size:7px;font-weight:900}
+.ai-summary{font-size:9px;line-height:1.5;background:#f7f9fb;border-left:3px solid var(--green);padding:9px;border-radius:7px;color:#53637a}.confidence{margin-top:9px;font-size:8px;color:var(--muted)}.confidence b{color:var(--green2);font-size:10px}.ops-footer{margin-top:10px;display:flex;align-items:center;gap:12px;font-size:8px;color:var(--muted)}.ops-footer span:first-child{color:var(--green2);font-weight:900}.ops-footer span:nth-child(2){flex:1}.ops-footer button{border:0;background:var(--green);color:#fff;padding:7px 10px;border-radius:7px;font-size:8px;font-weight:900}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media(max-width:800px){.ops-grid{grid-template-columns:1fr}.ops{padding:10px}.ops-footer{flex-wrap:wrap}.ops-footer span:nth-child(2){flex-basis:100%}}
+
+/* STEP-SPECIFIC CONTENT */
+.ops{display:none;position:absolute;inset:64px 0 0;background:#f3f7fa;padding:15px;overflow:auto}.ops.show{display:block;animation:fadein .28s ease}
+.ops-banner{background:linear-gradient(110deg,#172f73,#29459a);color:#fff;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;box-shadow:0 10px 22px rgba(30,57,112,.15)}.ops-live{font-size:7px;letter-spacing:.12em;font-weight:900;color:#9ae88f}.ops-banner b{display:block;font-size:13px;margin:4px 0 2px}.ops-banner small{font-size:8px;color:#d8e3ff}.ops-time{text-align:right;font-size:11px}.ops-time small{font-size:7px;color:#c4d0ed}
+.section-grid{display:grid;gap:9px;margin-bottom:9px}.section-grid.two{grid-template-columns:1fr 1fr}.section-grid.three{grid-template-columns:repeat(3,1fr)}.section-grid.four{grid-template-columns:repeat(4,1fr)}
+.data-card,.panel{background:#fff;border:1px solid #dfe7ee;border-radius:13px;padding:11px;box-shadow:0 5px 14px rgba(25,53,100,.045)}.data-card label{display:block;font-size:7px;letter-spacing:.1em;color:#8591a4;font-weight:900}.data-card strong{display:block;font-size:25px;color:var(--blue);letter-spacing:-.03em;margin:5px 0 2px}.data-card span{font-size:8px;color:var(--muted)}.data-card.highlight{border-top:3px solid var(--red)}.priority,.delivery{display:inline-block;margin-top:8px;background:#fff0df;color:#a66b16;border-radius:6px;padding:5px 7px;font-size:7px;font-weight:900}.delivery.green{background:#e6f4e1;color:var(--green2)}.tiny-bar{height:4px;background:#e8edf1;border-radius:8px;margin-top:8px;overflow:hidden}.tiny-bar i{display:block;height:100%;background:var(--blue);border-radius:8px}.tiny-bar.green i{background:var(--green)}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.panel-head b{font-size:10px}.panel-head span{font-size:7px;color:#8591a4;background:#f3f6f8;padding:4px 6px;border-radius:5px;font-weight:800}
+.seg{display:grid;grid-template-columns:80px 30px 1fr;align-items:center;gap:6px;padding:7px 0;border-top:1px solid #edf1f4;font-size:8px}.seg:first-of-type{border-top:0}.seg b{text-align:right}.seg i{height:5px;background:#e9eef2;border-radius:5px;overflow:hidden}.seg em{display:block;height:100%;background:var(--blue);border-radius:5px}.check{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid #edf1f4}.check:first-of-type{border-top:0}.check>span{width:19px;height:19px;border-radius:6px;background:#e7f4e2;color:var(--green2);display:grid;place-items:center;font-size:9px;font-weight:900}.check.warn>span{background:#fff0df;color:#ae711b}.check b{display:block;font-size:8px}.check small{display:block;color:var(--muted);font-size:7px;margin-top:2px}
+.customer-table{padding-bottom:5px}.table-head,.table-row{display:grid;grid-template-columns:1.2fr 1.2fr .8fr .8fr;gap:8px;align-items:center;padding:7px 0;border-top:1px solid #edf1f4;font-size:7px}.table-head{border-top:0;color:#8792a4;font-weight:900;letter-spacing:.06em}.table-row b{font-size:8px}.table-row strong{color:var(--green2)}.table-row .red{color:var(--red)}
+.campaign{display:flex;align-items:center;gap:8px}.campaign-icon{width:28px;height:28px;border-radius:8px;background:#eaf0fa;color:var(--blue);display:grid;place-items:center}.campaign b{font-size:8px}.campaign small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.sent{margin-left:auto;background:#e6f4e1;color:var(--green2);font-size:6px;padding:5px;border-radius:5px;font-weight:900}.message{margin-top:9px;background:#f4f7f9;border-radius:9px;padding:9px;font-size:8px;line-height:1.45;color:#5d6c82}.channel-pills{display:flex;gap:5px;margin-top:7px}.channel-pills span{font-size:7px;background:#edf3f9;color:var(--blue);padding:5px 6px;border-radius:5px;font-weight:900}.response{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-top:1px solid #edf1f4;font-size:8px}.response:first-of-type{border-top:0}.response b{color:var(--blue);font-size:11px}.response.big{padding:9px}.action-panel{display:flex;justify-content:space-between;align-items:center}.action-panel b{display:block;font-size:9px}.action-panel small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.action-panel button,.quick button{border:0;background:var(--blue);color:#fff;border-radius:7px;padding:7px 9px;font-size:7px;font-weight:900}
+.portal{background:#fff;border:1px solid #dfe7ee;border-radius:13px;overflow:hidden;box-shadow:0 5px 14px rgba(25,53,100,.045)}.portal-top{padding:10px 12px;background:#f6f8fa;display:flex;justify-content:space-between;font-size:8px}.portal-top span{color:var(--muted)}.portal-alert{display:flex;gap:8px;align-items:center;padding:13px}.alert-icon{width:28px;height:28px;border-radius:50%;background:#fff0df;color:#b16f12;display:grid;place-items:center;font-weight:900}.portal-alert b{font-size:10px}.portal-alert small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.eta{margin:0 13px;background:#eef7eb;border-radius:10px;padding:11px}.eta span{font-size:7px;color:#607563}.eta strong{display:block;font-size:22px;color:#35683d;margin:2px 0}.eta em{font-size:7px;color:var(--green2);font-style:normal;font-weight:900}.portal-line{display:flex;align-items:center;gap:4px;padding:14px;font-size:6px;color:#748196}.portal-line i{height:2px;background:#bdd7b5;flex:1}.faq{padding:0 13px 13px}.faq b{display:block;font-size:8px;margin-bottom:5px}.faq span{display:inline-block;background:#f3f6f8;padding:6px;border-radius:6px;margin:2px;font-size:7px;color:#5d6c82}.insight-box{margin-top:10px;background:#edf7ea;color:#55715b;padding:9px;border-radius:8px;font-size:8px;line-height:1.4}.journey-result{display:flex;justify-content:space-between;align-items:center}.journey-result>div{display:flex;align-items:center;gap:8px}.green-check{width:24px;height:24px;border-radius:50%;background:#e4f3df;color:var(--green2);display:grid;place-items:center;font-size:10px;font-weight:900}.journey-result b{display:block;font-size:9px}.journey-result small{display:block;color:var(--muted);font-size:7px}.journey-result>strong{font-size:10px;color:var(--green2)}
+.call-screen{background:#fff;border:1px solid #dfe7ee;border-radius:13px;padding:13px;box-shadow:0 5px 14px rgba(25,53,100,.045)}.call-head{display:flex;justify-content:space-between;font-size:8px;border-bottom:1px solid #edf1f4;padding-bottom:8px}.call-live{color:var(--green2);font-weight:900}.caller{display:flex;align-items:center;gap:8px;padding:12px 0}.big-avatar{width:34px;height:34px;border-radius:50%;background:#e5eef9;color:var(--blue);display:grid;place-items:center;font-size:9px;font-weight:900}.caller b{font-size:9px}.caller small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.verified{margin-left:auto;color:var(--green2);background:#e6f4e1;padding:4px 6px;border-radius:5px;font-size:6px;font-weight:900}.transcript{background:#f5f7f9;border-radius:9px;padding:9px}.speaker{font-size:6px;font-weight:900;color:#8792a4}.agent-s{color:var(--blue)}.transcript p{font-size:8px;line-height:1.45;margin:4px 0 9px}.intent{display:flex;gap:6px;align-items:center;margin-top:9px;font-size:7px}.intent span{color:var(--muted)}.intent b{background:#edf3f9;color:var(--blue);padding:5px 6px;border-radius:5px}.intent .positive{background:#e7f4e2;color:var(--green2)}.context-item{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #edf1f4;font-size:8px}.context-item:first-of-type{border-top:0}.context-item span{color:var(--muted)}.green-text{color:var(--green2)}.suggestion{margin-top:9px;background:#eef7eb;border-radius:9px;padding:9px}.suggestion b{font-size:8px;color:#396740}.suggestion p{font-size:8px;line-height:1.4;color:#5d6c82;margin:4px 0}.suggestion button{border:0;background:var(--green);color:#fff;border-radius:6px;padding:6px 8px;font-size:7px;font-weight:900}
+.agent-desktop{background:#14284c;border-radius:14px;overflow:hidden;color:#fff;box-shadow:0 12px 25px rgba(15,35,70,.25)}.ad-top{height:34px;background:#0e203e;display:flex;align-items:center;gap:13px;padding:0 12px;font-size:8px}.ad-top>span:not(.ad-user){color:#7ee077}.ad-user{margin-left:auto;color:#bac9e4}.ad-body{display:grid;grid-template-columns:145px 1fr 150px;min-height:315px}.ad-left{background:#112442;padding:12px}.ad-left small,.ad-right small{font-size:6px;letter-spacing:.12em;color:#8294b2;font-weight:900}.queue,.queue-active{padding:8px;border-radius:7px;margin-top:6px;font-size:8px}.queue-active{background:#263f6d}.queue em{float:right;color:#8597b5;font-style:normal;font-size:6px}.queue-stat{margin-top:8px;font-size:7px;color:#95a7c3}.queue-stat b{font-size:13px;color:#fff}.ad-left hr{border:0;border-top:1px solid #263a5d;margin:13px 0}.ad-main{background:#f6f8fa;color:var(--ink);padding:12px}.ad-customer{display:flex;align-items:center;gap:8px}.ad-customer b{font-size:10px}.ad-customer span{display:block;color:var(--muted);font-size:7px;margin-top:2px}.ad-customer label{margin-left:auto;background:#fff0df;color:#a56c16;padding:5px 7px;border-radius:5px;font-size:6px;font-weight:900}.context-strip{display:flex;gap:5px;margin:10px 0}.context-strip span{background:#e8eef6;color:var(--blue);padding:6px 7px;border-radius:5px;font-size:6px;font-weight:900}.ad-panels{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.ad-panels>div{background:#fff;border:1px solid #dfe7ee;border-radius:8px;padding:9px}.ad-panels small{font-size:6px;color:#8a95a6;font-weight:900}.ad-panels b{display:block;font-size:8px;margin-top:3px}.ad-panels p{font-size:7px;line-height:1.4;color:#64738a;margin:5px 0}.ad-right{background:#172d52;padding:12px}.ad-right button{display:block;width:100%;border:0;background:#263f6d;color:#fff;border-radius:6px;padding:7px;margin-top:6px;text-align:left;font-size:7px;font-weight:800}.ad-right .green-btn{background:var(--green)}.next-action{display:block;margin-top:17px!important}.ad-right>b{display:block;font-size:7px;color:#c5d3e8;margin-top:5px;line-height:1.4}
+.resolved-hero{display:flex;align-items:center;gap:11px;background:linear-gradient(110deg,#1c6136,#3d8f3e);color:#fff;border-radius:14px;padding:14px;margin-bottom:9px}.check-big{width:40px;height:40px;border-radius:50%;background:#fff;color:var(--green2);display:grid;place-items:center;font-size:20px;font-weight:900}.resolved-hero span{font-size:6px;letter-spacing:.14em;font-weight:900;opacity:.75}.resolved-hero h2{font-size:15px;margin:3px 0}.resolved-hero p{font-size:8px;margin:0;color:#d9f0d8}.resolved-hero>strong{margin-left:auto;font-size:18px}.delivery-line{display:flex;gap:6px;margin-top:8px}.delivery-line span{font-size:7px;background:#e7f4e2;color:var(--green2);padding:5px 6px;border-radius:5px;font-weight:900}.message.success{background:#eef7eb;color:#49674f}.audit{display:grid;grid-template-columns:40px 1fr 60px;gap:7px;align-items:center;padding:6px 0;border-top:1px solid #edf1f4;font-size:7px}.audit:first-of-type{border-top:0}.audit span{color:var(--muted)}.audit b{font-size:8px}.audit small{color:var(--muted)}.closure{background:#eef7eb;border:1px solid #d7ead2;border-radius:10px;padding:9px;display:flex;align-items:center;gap:9px}.closure b{font-size:9px;color:#3e7145}.closure span{font-size:7px;color:#617463;flex:1}.closure button{border:0;background:var(--green);color:#fff;border-radius:6px;padding:7px 9px;font-size:7px;font-weight:900}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media(max-width:850px){.section-grid.three,.section-grid.four,.section-grid.two{grid-template-columns:1fr}.ad-body{grid-template-columns:1fr}.ad-left,.ad-right{display:none}.ad-panels{grid-template-columns:1fr}.table-head,.table-row{grid-template-columns:1fr 1fr}.ops{padding:10px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <img class="logo" src="https://www.brabantwater.nl/sites/brabantwater.nl/files/images/beeldbank/Logo_Brabant_water_PNG_Webgebruik_0.jpg" alt="Brabant Water">
+  <nav class="nav"><span class="active">Storing Journey</span><span>Digital Twin</span><span>Klantcontact</span><span>Operatie</span></nav>
+  <div class="live"><i></i> INTERACTIEVE DEMO</div>
+</header>
+
+<section class="hero">
+ <div class="hero-inner">
+  <div><div class="eyebrow">Brabant Water · end-to-end klantreis</div><h1>Van netwerkafwijking naar klantoplossing</h1><p>Een visuele demonstratie waarin de fysieke storing, digitale detectie, klantdata, proactieve communicatie en het contactcenter één geïntegreerde reis vormen.</p></div>
+  <div class="scenario"><small>Live scenario</small><b>Grote waterstoring · Vught</b><span>Impactgebied wordt realtime bepaald</span></div>
+ </div>
+</section>
+
+<div class="wrap">
+<div class="dashboard">
+
+<aside class="card left">
+ <h3>Procesflow</h3>
+ <div id="steps"></div>
+</aside>
+
+<section class="card mapcard">
+ <div class="maphead">
+  <div class="maptitle"><div class="mapicon" id="centerIcon">⌖</div><div><b id="centerTitle">Live kaart · Vught</b><span id="centerSub">Google Maps · impactgebied & klantlocaties</span></div></div>
+  <div class="map-actions" id="mapActions"><button onclick="centerMap()">⌖ Centreer</button><button class="primary" onclick="openMaps()">Open Google Maps ↗</button></div>
+ </div>
+
+ <div class="map" id="centerPanel">
+   <iframe id="gmap" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Lijsterlaan%2018%2C%20Vught%2C%20Nederland&output=embed"></iframe>
+   <div class="outage-zone" id="zone"></div>
+   <div class="pin pulse" id="pin" title="Waterstoring"></div>
+   <div class="map-label" id="maplabel">WATERSTORING<span>Impactgebied actief</span></div>
+   <div class="map-status"><i></i><span id="mapstatus">STORING ACTIEF</span><span id="mapsub">Impact wordt bepaald</span></div>
+
+   <div class="overlay twin" id="twin">
+    <div class="tt"><span>DIGITAL TWIN · SOFIA</span><span class="ok">● LIVE</span></div>
+    <div class="mini-map"><i class="mdot m1"></i><i class="mdot m2"></i><i class="mdot m3"></i></div>
+    <p>Afwijkende druk/flow gedetecteerd. Het model berekent welk deel van het netwerk geraakt wordt.</p>
+   </div>
+
+   <div class="overlay mobile" id="mobile">
+    <div class="screen"><div class="m-top"></div><div class="m-body"><div class="m-brand">brabant Water</div><div class="notif"><b>Waterstoring in jouw buurt</b>We zijn op de hoogte. Verwachte hersteltijd: 14:30.</div><div class="link">Bekijk actuele status →</div></div></div>
+   </div>
+
+   <div class="overlay agent" id="agent">
+    <div class="agenttop"><div class="avatar">SV</div><div><b>Sanne · Klantcontact</b><small>Inkomend gesprek · context automatisch beschikbaar</small></div></div>
+    <div class="context"><strong>Klantcontext</strong><br>Adres: Lijsterlaan 18 · Vught<br>Storing: gebiedsstoring bevestigd<br>SMS: verzonden · statuspagina: bekeken<br>Laatste contact: geen</div>
+    <div class="agent-actions"><button>CRM / MECOMS</button><button>Storing</button><button class="go">Context overnemen</button></div>
+   </div>
+
+   <div class="map-card-note"><div><b id="mapnote">Detectie gestart</b><span id="mapsubnote">De keten volgt de storing stap voor stap.</span></div><button onclick="next()">Volgende stap →</button></div>
+ </div>
+
+ <!-- Step-specific operational cockpit -->
+<div class="ops" id="ops">
+  <div class="ops-banner">
+    <div>
+      <span class="ops-live" id="opsLive">● LIVE</span>
+      <b id="opsTitle">Klantpopulatie & impact</b>
+      <small id="opsSub">De juiste klanten worden gekoppeld aan het incident.</small>
+    </div>
+    <div class="ops-time"><b id="opsClock">12:18</b><br><small>laatste update</small></div>
+  </div>
+
+  <!-- STEP 3: CUSTOMER MAPPING -->
+  <div class="specific" id="spec2">
+    <div class="section-grid three">
+      <div class="data-card highlight"><label>GETROFFEN AANSLUITINGEN</label><strong>438</strong><span>binnen impactgebied</span><div class="tiny-bar"><i style="width:78%"></i></div></div>
+      <div class="data-card"><label>HUISHOUDENS</label><strong>391</strong><span>particuliere aansluitingen</span><div class="tiny-bar green"><i style="width:89%"></i></div></div>
+      <div class="data-card"><label>BIJZONDERE KLANTEN</label><strong>7</strong><span>extra prioriteit / zorgbehoefte</span><div class="priority">⚠ Prioriteit</div></div>
+    </div>
+    <div class="section-grid two">
+      <div class="panel"><div class="panel-head"><b>Klantsegmentatie</b><span>CRM / MECOMS</span></div>
+        <div class="seg"><span>Particulier</span><b>391</b><i><em style="width:89%"></em></i></div>
+        <div class="seg"><span>Zakelijk</span><b>40</b><i><em style="width:10%"></em></i></div>
+        <div class="seg"><span>Bijzonder</span><b>7</b><i><em style="width:2%"></em></i></div>
+      </div>
+      <div class="panel"><div class="panel-head"><b>Contacteerbaarheid</b><span>communicatieprofiel</span></div>
+        <div class="check"><span>✓</span><div><b>SMS beschikbaar</b><small>421 klanten</small></div></div>
+        <div class="check"><span>✓</span><div><b>App / portal actief</b><small>286 klanten</small></div></div>
+        <div class="check warn"><span>!</span><div><b>Geen digitaal kanaal</b><small>17 klanten → alternatieve route</small></div></div>
+      </div>
+    </div>
+    <div class="panel customer-table"><div class="panel-head"><b>Voorbeeld getroffen klanten</b><span>3 van 438 zichtbaar</span></div>
+      <div class="table-head"><span>KLANT</span><span>ADRES</span><span>PROFIEL</span><span>ACTIE</span></div>
+      <div class="table-row"><b>Jeroen van Dijk</b><span>Lijsterlaan 18</span><span>Particulier</span><strong>SMS</strong></div>
+      <div class="table-row"><b>Familie Peters</b><span>Lijsterlaan 24</span><span>Bijzonder</span><strong class="red">Prioriteit</strong></div>
+      <div class="table-row"><b>Van Hout BV</b><span>Meidoornstraat 7</span><span>Zakelijk</span><strong>SMS + mail</strong></div>
+    </div>
+  </div>
+
+  <!-- STEP 4: PROACTIVE COMMUNICATION -->
+  <div class="specific" id="spec3">
+    <div class="section-grid three">
+      <div class="data-card highlight"><label>BERICHTEN VERSTUURD</label><strong>421</strong><span>van 421 digitaal bereikbare klanten</span><div class="delivery">100% verzonden</div></div>
+      <div class="data-card"><label>GEOPEND</label><strong>367</strong><span>87% binnen 5 minuten</span><div class="tiny-bar green"><i style="width:87%"></i></div></div>
+      <div class="data-card"><label>SELF SERVICE</label><strong>312</strong><span>klanten vonden antwoord zonder contact</span><div class="delivery green">74% containment</div></div>
+    </div>
+    <div class="section-grid two">
+      <div class="panel"><div class="panel-head"><b>Communicatiecampagne</b><span>Genesys Cloud CX</span></div>
+        <div class="campaign"><div class="campaign-icon">✉</div><div><b>Waterstoring in jouw buurt</b><small>SMS · 12:08 · doelgroep: 421</small></div><span class="sent">VERSTUURD</span></div>
+        <div class="message">“We zijn op de hoogte van een waterstoring in uw buurt. Verwachte hersteltijd: <b>14:30</b>. Bekijk de actuele status via onze website.”</div>
+        <div class="channel-pills"><span>SMS 421</span><span>Web 312</span><span>App 286</span></div>
+      </div>
+      <div class="panel"><div class="panel-head"><b>Respons</b><span>realtime</span></div>
+        <div class="response"><span>Geen contact nodig</span><b>312</b></div><div class="response"><span>Statuspagina</span><b>367</b></div><div class="response"><span>Doorgaan naar contactcenter</span><b>24</b></div><div class="response"><span>Mislukte aflevering</span><b>0</b></div>
+      </div>
+    </div>
+    <div class="panel action-panel"><div><b>Volgende actie</b><small>Geen extra communicatie nodig zolang ETA en status stabiel blijven.</small></div><button>Campagne monitoren</button></div>
+  </div>
+
+  <!-- STEP 5: SELF SERVICE -->
+  <div class="specific" id="spec4">
+    <div class="section-grid two">
+      <div class="portal"><div class="portal-top"><b>Brabant Water · actuele storing</b><span>12:11</span></div><div class="portal-alert"><div class="alert-icon">!</div><div><b>Waterstoring in Vught</b><small>De storing is bekend bij Brabant Water.</small></div></div><div class="eta"><span>Verwachte hersteltijd</span><strong>14:30</strong><em>● Actueel</em></div><div class="portal-line"><span>Storing gemeld</span><i></i><span>Monteur onderweg</span><i></i><span>Herstel</span></div><div class="faq"><b>Veelgestelde vragen</b><span>Kan ik water gebruiken?</span><span>Wanneer is het opgelost?</span><span>Moet ik iets doen?</span></div></div>
+      <div class="panel"><div class="panel-head"><b>Selfservice analytics</b><span>laatste 15 min</span></div>
+        <div class="response big"><span>Status bekeken</span><b>367</b></div><div class="response big"><span>FAQ geopend</span><b>129</b></div><div class="response big"><span>Contact gestart</span><b>24</b></div><div class="response big"><span>Escalatie</span><b>3</b></div>
+        <div class="insight-box">💡 <b>Inzicht:</b> 93% van de bezoekers heeft voldoende informatie om geen medewerker te spreken.</div>
+      </div>
+    </div>
+    <div class="panel journey-result"><div><span class="green-check">✓</span><div><b>Klantreis geslaagd</b><small>Informatiebehoefte opgelost zonder voice-contact.</small></div></div><strong>93% digitaal afgehandeld</strong></div>
+  </div>
+
+  <!-- STEP 6: INBOUND VOICE -->
+  <div class="specific" id="spec5">
+    <div class="section-grid two">
+      <div class="call-screen"><div class="call-head"><span class="call-live">● IN GESPREK</span><b>00:42</b></div><div class="caller"><div class="big-avatar">JV</div><div><b>Jeroen van Dijk</b><small>Lijsterlaan 18 · Vught</small></div><span class="verified">✓ Geverifieerd</span></div><div class="transcript"><span class="speaker">KLANT</span><p>“Ik zie dat de storing bekend is, maar ik wil graag weten of het om half drie echt opgelost is.”</p><span class="speaker agent-s">MEDEWERKER</span><p>“Ik kan de actuele verwachting voor u controleren. U bent gekoppeld aan de storing in uw straat.”</p></div><div class="intent"><span>Intent</span><b>Status / hersteltijd</b><span>Sentiment</span><b class="positive">Neutraal</b></div></div>
+      <div class="panel"><div class="panel-head"><b>Gesprekscontext</b><span>automatisch opgebouwd</span></div>
+        <div class="context-item"><span>Storing</span><b>INC-2026-1048</b></div><div class="context-item"><span>Klant geïnformeerd</span><b>SMS 12:08</b></div><div class="context-item"><span>Statuspagina</span><b>Bekeken 12:11</b></div><div class="context-item"><span>Eerdere contacten</span><b>Geen</b></div><div class="context-item"><span>Verificatie</span><b class="green-text">Automatisch</b></div>
+        <div class="suggestion"><b>AI-suggestie</b><p>Bevestig ETA 14:30 en informeer dat een automatische update volgt bij wijziging.</p><button>Antwoord overnemen</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 7: ROUTING / AGENT DESKTOP -->
+  <div class="specific" id="spec6">
+    <div class="agent-desktop">
+      <div class="ad-top"><b>Genesys · Agent Workspace</b><span>● verbonden</span><span class="ad-user">Sanne · Klantcontact</span></div>
+      <div class="ad-body">
+        <aside class="ad-left"><small>INKOMEND</small><div class="queue-active">☎ Jeroen van Dijk<em>00:42</em></div><div class="queue">☎ Familie Peters<em>00:17</em></div><div class="queue">☎ Anja Smits<em>00:09</em></div><hr><small>WACHTRIJ</small><div class="queue-stat"><b>3</b> actieve gesprekken</div></aside>
+        <main class="ad-main"><div class="ad-customer"><div class="big-avatar">JV</div><div><b>Jeroen van Dijk</b><span>Lijsterlaan 18 · Vught</span></div><label>STORINGSCONTEXT</label></div>
+          <div class="context-strip"><span>INC-2026-1048</span><span>438 aansluitingen</span><span>ETA 14:30</span><span>SMS verzonden</span></div>
+          <div class="ad-panels"><div><small>CRM / MECOMS</small><b>Klantprofiel</b><p>Particulier · 2 eerdere diensten · geen openstaande zaken.</p></div><div><small>INCIDENT</small><b>Storing actief</b><p>Monteur onderweg · impactgebied bevestigd · prioriteit P1.</p></div><div><small>AI ASSIST</small><b>Samenvatting</b><p>Klant vraagt alleen bevestiging van hersteltijd.</p></div></div>
+        </main>
+        <aside class="ad-right"><small>ACTIONS</small><button>✓ ETA bevestigen</button><button>↗ Status delen</button><button>＋ Case noteren</button><button class="green-btn">✓ Gesprek afronden</button><small class="next-action">VOLGENDE ACTIE</small><b>Automatische klantupdate blijft actief.</b></aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 8: RESOLUTION -->
+  <div class="specific" id="spec7">
+    <div class="resolution">
+      <div class="resolved-hero"><div class="check-big">✓</div><div><span>INCIDENT AFGEROND</span><h2>Waterlevering hersteld</h2><p>De keten sluit automatisch af en de klant ontvangt een laatste update.</p></div><strong>14:26</strong></div>
+      <div class="section-grid four">
+        <div class="data-card"><label>HERSTELTIJD</label><strong>14:26</strong><span>4 min sneller dan ETA</span></div>
+        <div class="data-card"><label>KLANTEN GEÏNFORMEERD</label><strong>438</strong><span>100% van impactgebied</span></div>
+        <div class="data-card"><label>CONTACTEN</label><strong>24</strong><span>5,5% van getroffen klanten</span></div>
+        <div class="data-card"><label>FCR</label><strong>96%</strong><span>zonder vervolgcontact</span></div>
+      </div>
+      <div class="section-grid two">
+        <div class="panel"><div class="panel-head"><b>Afsluitbericht</b><span>Genesys · 14:27</span></div><div class="message success">“De waterstoring in uw buurt is opgelost. De waterlevering is hersteld. Bedankt voor uw begrip.”</div><div class="delivery-line"><span>✓ SMS</span><span>✓ App</span><span>✓ Webstatus</span></div></div>
+        <div class="panel"><div class="panel-head"><b>Audit trail</b><span>volledig vastgelegd</span></div><div class="audit"><span>12:03</span><b>Detectie</b><small>Digital Twin</small></div><div class="audit"><span>12:08</span><b>Proactieve melding</b><small>Genesys</small></div><div class="audit"><span>12:18</span><b>Contactcenter</b><small>Contextueel gerouteerd</small></div><div class="audit"><span>14:26</span><b>Herstel</b><small>Verkeerstoren / operatie</small></div></div>
+      </div>
+      <div class="closure"><b>✓ Klantreis gesloten</b><span>Data beschikbaar voor rapportage, evaluatie en continue verbetering.</span><button>Bekijk KPI's →</button></div>
+    </div>
+  </div>
+</div></div>
+</section></section>
+
+<aside class="card right">
+ <div>
+  <h3>Live status</h3>
+  <div class="statusbox"><div class="label">Huidige stap</div><b id="currentName">1 · Detectie</b><span id="currentStatus">Netwerkafwijking gedetecteerd</span></div>
+ </div>
+ <div>
+  <h3>Klantcontext</h3>
+  <div class="feed" id="feed"></div>
+ </div>
+ <div class="metric">
+  <div class="metricrow"><span>Impactgebied</span><b id="impact">—</b></div>
+  <div class="metricrow"><span>Aansluitingen</span><b id="connections">—</b></div>
+  <div class="metricrow"><span>Kanaal</span><b id="channel">—</b></div>
+  <div class="metricrow"><span>Medewerkercontext</span><b id="contextState">Nog niet</b></div>
+ </div>
+</aside>
+
+</div>
+
+<section class="bottom">
+ <div class="bottomtop"><b>End-to-end journey</b><span>Van signalering → klant → medewerker → herstel</span></div>
+ <div class="timeline" id="timeline"></div>
+ <div class="bottomlabels" id="labels"></div>
+ <div class="buttons"><button class="restart" onclick="go(0)">↺ Start opnieuw</button><button class="next" onclick="next()">Volgende stap →</button></div>
+</section>
+<div class="disclaimer">Conceptuele demonstratie. Google Maps is live en opent/werkt als Google Maps; de storing, impactzone en procesdata in deze demo zijn gesimuleerd.</div>
+</div>
+</div>
+
+<script>
+const steps=[
+ {name:"Detectie",short:"Detecteer",tech:"Digital Twin / SOFIA",status:"Afwijkende druk/flow gedetecteerd",note:"Netwerkafwijking gedetecteerd",sub:"De digitale operatie ziet het signaal vóór de klant belt.",impact:"—",connections:"—",channel:"Netwerkdata",context:"Nog niet",map:"Impact wordt bepaald"},
+ {name:"Impact bepalen",short:"Impact",tech:"Digital Twin / SOFIA",status:"Impactgebied berekend",note:"Impactgebied wordt bepaald",sub:"Het netwerkmodel berekent het gebied dat geraakt kan zijn.",impact:"12 straten",connections:"438",channel:"Digital Twin",context:"Nog niet",map:"12 straten · 438 aansluitingen"},
+ {name:"Klant koppelen",short:"Koppelen",tech:"Dynamics 365 / MECOMS",status:"Getroffen aansluitingen gekoppeld",note:"Klantpopulatie gekoppeld",sub:"Aansluitingen worden gekoppeld aan de relevante klantcontext.",impact:"12 straten",connections:"438",channel:"Klantdata",context:"Beschikbaar",map:"438 aansluitingen"},
+ {name:"Proactief informeren",short:"Proactief",tech:"Genesys Cloud CX",status:"Klantbericht verzonden",note:"Klant krijgt bericht",sub:"De klant wordt geïnformeerd zonder eerst te hoeven bellen.",impact:"12 straten",connections:"438",channel:"SMS / app / web",context:"Beschikbaar",map:"Bericht naar getroffen klanten"},
+ {name:"Selfservice",short:"Selfservice",tech:"Statuspagina / app",status:"Klant bekijkt actuele status",note:"Klant controleert status",sub:"De klant ziet storing en verwachte hersteltijd.",impact:"12 straten",connections:"438",channel:"Web / app",context:"Beschikbaar",map:"Status bekeken"},
+ {name:"Klant belt",short:"Bellen",tech:"Genesys Cloud CX",status:"Inkomend gesprek",note:"Klant belt voor aanvullende hulp",sub:"Voice blijft beschikbaar als selfservice niet voldoende is.",impact:"12 straten",connections:"438",channel:"Voice",context:"Beschikbaar",map:"Inkomend gesprek"},
+ {name:"Contextueel routeren",short:"Routing",tech:"Genesys + CRM / MECOMS",status:"Juiste medewerker + context",note:"Gesprek gerouteerd met context",sub:"De medewerker ziet de storing en klantcontext direct.",impact:"12 straten",connections:"438",channel:"Voice + CRM",context:"Volledig",map:"Medewerker ziet klantcontext"},
+ {name:"Oplossen & terugkoppelen",short:"Oplossen",tech:"Operatie + contactcenter",status:"Storing opgelost",note:"Klant ontvangt oplossing",sub:"De storing wordt afgerond en de klant krijgt een laatste update.",impact:"Hersteld",connections:"438",channel:"Proactieve update",context:"Volledig",map:"Waterlevering hersteld"}
+];
+
+const stepsEl=document.getElementById("steps"),feed=document.getElementById("feed"),timeline=document.getElementById("timeline"),labels=document.getElementById("labels");
+steps.forEach((s,i)=>{
+ const b=document.createElement("button");b.className="step";b.id="st"+i;b.onclick=()=>go(i);
+ b.innerHTML=`<div class="n">${i+1}</div><div><b>${s.short}</b><small>${s.tech}</small></div><div class="arrow">›</div>`;
+ stepsEl.appendChild(b);
+ if(i<steps.length-1){const c=document.createElement("div");c.className="connector";stepsEl.appendChild(c)}
+ const t=document.createElement("div");t.className="tl";t.id="tl"+i;timeline.appendChild(t);
+ const l=document.createElement("span");l.textContent=s.short;labels.appendChild(l);
+ const e=document.createElement("div");e.className="event";e.id="ev"+i;e.innerHTML=`<b>${i+1}. ${s.name}</b><span>${s.status}</span>`;feed.appendChild(e);
+});
+let current=0;
+function go(i){
+ current=i;const s=steps[i];
+ document.querySelectorAll(".step").forEach((x,j)=>{x.classList.toggle("active",j===i);x.classList.toggle("done",j<i)});
+ document.querySelectorAll(".tl").forEach((x,j)=>{x.classList.toggle("active",j===i);x.classList.toggle("done",j<i)});
+ document.querySelectorAll(".event").forEach((x,j)=>x.classList.toggle("active",j===i));
+ document.getElementById("currentName").textContent=(i+1)+" · "+s.name;
+ document.getElementById("currentStatus").textContent=s.status;
+ document.getElementById("impact").textContent=s.impact;
+ document.getElementById("connections").textContent=s.connections;
+ document.getElementById("channel").textContent=s.channel;
+ document.getElementById("contextState").textContent=s.context;
+
+ const map=document.getElementById("centerPanel"),ops=document.getElementById("ops");
+ const mapActions=document.getElementById("mapActions"),title=document.getElementById("centerTitle"),sub=document.getElementById("centerSub"),icon=document.getElementById("centerIcon");
+ const showMap=i<=1;
+ if(showMap){
+   map.style.display="block";ops.classList.remove("show");mapActions.style.display="flex";
+   title.textContent="Live kaart · Vught";sub.textContent="Google Maps · impactgebied & klantlocaties";icon.textContent="⌖";
+   document.getElementById("mapnote").textContent=s.note;document.getElementById("mapsubnote").textContent=s.sub;document.getElementById("mapsub").textContent=s.map;
+   ["twin","mobile","agent"].forEach(id=>document.getElementById(id).classList.remove("show"));
+   document.getElementById("zone").style.opacity=i===1?"1":".35";document.getElementById("pin").style.opacity=i===1?"1":".7";
+   if(i===1)document.getElementById("twin").classList.add("show");
+ }else{
+   map.style.display="none";ops.classList.add("show");mapActions.style.display="none";
+   icon.textContent="▦";title.textContent="Operationeel storingsbeeld";sub.textContent="Stap "+(i+1)+" · informatie specifiek voor deze fase";
+   document.getElementById("opsLive").textContent=i===7?"● HERSTELD":"● LIVE";
+   document.getElementById("opsTitle").textContent=[
+     "","",
+     "Getroffen klanten koppelen",
+     "Proactief informeren",
+     "Klant gebruikt selfservice",
+     "Inkomend klantcontact",
+     "Juiste medewerker + volledige context",
+     "Storing opgelost & klant geïnformeerd"
+   ][i];
+   document.getElementById("opsSub").textContent=s.sub;
+   document.querySelectorAll(".specific").forEach(x=>x.style.display="none");
+   document.getElementById("spec"+i).style.display="block";
+ }
+}
+function next(){go((current+1)%steps.length)}
+function openMaps(){window.open("https://www.google.com/maps/search/?api=1&query=Lijsterlaan%2018%2C%20Vught%2C%20Nederland","_blank")}
+function centerMap(){document.getElementById("gmap").src="https://www.google.com/maps?q=Lijsterlaan%2018%2C%20Vught%2C%20Nederland&output=embed"}
+go(0);
+</script>
+</body>
+</html>
